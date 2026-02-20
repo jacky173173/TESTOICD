@@ -11,7 +11,8 @@ app.secret_key = "test_secret_key_123"
 # --- 配置資訊 ---
 CLIENT_ID = "test.oidc"
 CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
-MY_IP = "192.168.116.25" 
+MY_IP = "testoidc.uattdtydomain.gov.hk"
+PORT = "5000"
 
 # 使用你剛剛抓到的正確端點
 KEYCLOAK_METADATA = {
@@ -81,9 +82,8 @@ def index():
 
 @app.route("/login")
 def login():
-    
-    redirect_uri = f"http://{MY_IP}:5000/auth"
-    print(f"Redirecting to Keycloak with URI: {redirect_uri}")
+    # 確保產生的 URI 是 http://testoidc.uattdtydomain.gov.hk
+    redirect_uri = f"http://{MY_IP}{PORT}/auth"
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 
@@ -115,5 +115,6 @@ def logout():
 if __name__ == "__main__":
     # 監聽 0.0.0.0 允許外部存取
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
