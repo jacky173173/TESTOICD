@@ -12,7 +12,8 @@ app.secret_key = "test_secret_key_123"
 CLIENT_ID = "test.oidc"
 CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
 MY_IP = "testoidc.uattdtydomain.gov.hk"
-PORT = "5000"
+redirect_uri = f"http://{MY_IP}/auth" 
+
 
 # 使用你剛剛抓到的正確端點
 KEYCLOAK_METADATA = {
@@ -104,7 +105,7 @@ def auth():
 def logout():
     session.clear()
     # 登出後跳轉回首頁
-    post_logout_uri = f"http://{MY_IP}:5000/"
+    post_logout_uri = f"http://{MY_IP}/"
     logout_url = (
         f"{KEYCLOAK_METADATA['end_session_endpoint']}"
         f"?post_logout_redirect_uri={post_logout_uri}"
@@ -113,8 +114,10 @@ def logout():
     return redirect(logout_url)
 
 if __name__ == "__main__":
-    # 監聽 0.0.0.0 允許外部存取
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # 將 port 從 5000 改為 80
+    app.run(host='0.0.0.0', port=80, debug=True)
+
+
 
 
 
