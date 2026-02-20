@@ -20,7 +20,6 @@ oauth.register(
     client_kwargs={"scope": "openid profile email"},
 )
 
-
 TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -64,7 +63,8 @@ def index():
 
 @app.route("/login")
 def login():
-    redirect_uri = url_for("auth", _external=True)
+    
+    redirect_uri = "http://127.0.0.1"
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 @app.route("/auth")
@@ -79,17 +79,19 @@ def auth():
 def logout():
     session.clear()
     
-    base_url = url_for("index", _external=True)
+    post_logout_uri = "http://127.0.0.1"
+    
+    end_session_url = "https://keytrain.uattdtydomain.gov.hk"
     
     logout_url = (
-        f"{CONF_URL}/protocol/openid-connect/logout" 
-        f"?post_logout_redirect_uri={base_url}"
+        f"{end_session_url}"
+        f"?post_logout_redirect_uri={post_logout_uri}"
         f"&client_id={CLIENT_ID}"
     )
     return redirect(logout_url)
 
 if __name__ == "__main__":
 
-    app.run(port=5000, debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)
 
 
