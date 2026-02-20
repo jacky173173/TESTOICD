@@ -3,9 +3,7 @@ from authlib.integrations.flask_client import OAuth
 import time
 
 app = Flask(__name__)
-
-# --- 直接在這裡設定參數 ---
-app.secret_key = "test_secret_key_123" # Flask Session 加密用
+app.secret_key = "test_secret_key_123" 
 CONF_URL = "http://localhost:8080/realms/demon/.well-known/openid-configuration"
 CLIENT_ID = "flask-app"
 CLIENT_SECRET = "NUYWcDfSgJ1vclYH27E8dRjBtpwqPZKz"
@@ -20,7 +18,7 @@ oauth.register(
     client_kwargs={"scope": "openid profile email"},
 )
 
-# HTML 模板：模仿 GitHub 範例的簡潔風格
+
 TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -70,7 +68,7 @@ def login():
 @app.route("/auth")
 def auth():
     token = oauth.keycloak.authorize_access_token()
-    user = token.get('userinfo') # Authlib 會自動從 id_token 解析 userinfo
+    user = token.get('userinfo') 
     session["user"] = user
     session["token"] = token
     return redirect(url_for("index"))
@@ -78,7 +76,7 @@ def auth():
 @app.route("/logout")
 def logout():
     session.clear()
-    # 確保這裡的 redirect_uri 使用 127.0.0.1
+    
     logout_url = (
         f"http://localhost:8080/realms/demon/protocol/openid-connect/logout"
         f"?post_logout_redirect_uri=http://127.0.0.1:5000/"
@@ -87,4 +85,5 @@ def logout():
     return redirect(logout_url)
 
 if __name__ == "__main__":
+
     app.run(port=5000, debug=True)
