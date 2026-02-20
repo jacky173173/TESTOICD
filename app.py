@@ -1,10 +1,12 @@
 from flask import Flask, redirect, url_for, session, render_template_string
 from authlib.integrations.flask_client import OAuth
 import time
+import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
 
 app = Flask(__name__)
 app.secret_key = "test_secret_key_123" 
-CONF_URL = "https://keytrain.uattdtydomain.gov.hk/admin/master/console/#/master"
+CONF_URL = "https://keytrain.uattdtydomain.gov.hk"
 CLIENT_ID = "test.oidc"
 CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
 # -----------------------
@@ -77,9 +79,11 @@ def auth():
 def logout():
     session.clear()
     
+    base_url = url_for("index", _external=True)
+    
     logout_url = (
-        f"http://localhost:8080/realms/demon/protocol/openid-connect/logout"
-        f"?post_logout_redirect_uri=http://127.0.0.1:5000/"
+        f"{CONF_URL}/protocol/openid-connect/logout" 
+        f"?post_logout_redirect_uri={base_url}"
         f"&client_id={CLIENT_ID}"
     )
     return redirect(logout_url)
@@ -87,4 +91,5 @@ def logout():
 if __name__ == "__main__":
 
     app.run(port=5000, debug=True)
+
 
