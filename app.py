@@ -2,20 +2,20 @@ from flask import Flask, redirect, url_for, session, render_template_string
 from authlib.integrations.flask_client import OAuth
 import os
 
-# 解決 HTTP 傳輸限制與 SSL 憑證問題
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
 
 app = Flask(__name__)
 app.secret_key = "test_secret_key_123" 
 
-# --- 配置資訊 ---
+
 CLIENT_ID = "test.oidc"
 CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
 MY_IP = "testoidc.uattdtydomain.gov.hk"
 redirect_uri = f"http://{MY_IP}/auth" 
 
 
-# 使用你剛剛抓到的正確端點
+
 KEYCLOAK_METADATA = {
     "issuer": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc",
     "authorization_endpoint": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc/protocol/openid-connect/auth",
@@ -26,19 +26,19 @@ KEYCLOAK_METADATA = {
 }
 
 oauth = OAuth(app)
-# 註冊時建議直接引用 metadata
+
 oauth.register(
     name="keycloak",
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
-    server_metadata_url=None, # 我們手動提供 metadata
+    server_metadata_url=None, 
     authorize_url=KEYCLOAK_METADATA["authorization_endpoint"],
     access_token_url=KEYCLOAK_METADATA["token_endpoint"],
     userinfo_endpoint=KEYCLOAK_METADATA["userinfo_endpoint"],
     jwks_uri=KEYCLOAK_METADATA["jwks_uri"],
     client_kwargs={
         "scope": "openid profile email",
-        "verify": False  # 若 Ubuntu 內部連線 SSL 有問題可保持 False
+        "verify": False  
     },
 )
 
@@ -89,7 +89,7 @@ def login():
 
 
 
-@app.route("/auth")  # 確保這裡與 Keycloak 後台設定的完全一樣
+@app.route("/auth")  
 def auth():
     print("Received callback from Keycloak")
     try:
@@ -104,7 +104,7 @@ def auth():
 @app.route("/logout")
 def logout():
     session.clear()
-    # 登出後跳轉回首頁
+
     post_logout_uri = f"http://{MY_IP}/"
     logout_url = (
         f"{KEYCLOAK_METADATA['end_session_endpoint']}"
@@ -114,8 +114,9 @@ def logout():
     return redirect(logout_url)
 
 if __name__ == "__main__":
-    # 將 port 從 5000 改為 80
+    
     app.run(host='0.0.0.0', port=80, debug=True)
+
 
 
 
