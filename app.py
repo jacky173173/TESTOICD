@@ -48,7 +48,7 @@ TEMPLATE = """
 <head>
     <title>OIDC Flask Test</title>
     <style>
-        /* 讓內容撐滿整個視窗並置中 */
+        
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
@@ -105,7 +105,7 @@ TEMPLATE = """
             <a class="btn" href="{{ url_for('login') }}">進入系統登入</a>
         {% else %}
             <div style="text-align: right;">
-                <a class="btn" style="background: #dc3545;" href="{{ url_for('logout') }}">安全登出</a>
+                <a class="btn" style="background: #dc3545;" href="{{ url_for('logout') }}">登出</a>
             </div>
             <br>
             <table>
@@ -163,6 +163,7 @@ def logout():
 if __name__ == "__main__":
     
     app.run(host='0.0.0.0', port=80, debug=True)
+
 
 
 
