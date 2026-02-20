@@ -4,9 +4,9 @@ import time
 
 app = Flask(__name__)
 app.secret_key = "test_secret_key_123" 
-CONF_URL = "http://localhost:8080/realms/demon/.well-known/openid-configuration"
-CLIENT_ID = "flask-app"
-CLIENT_SECRET = "NUYWcDfSgJ1vclYH27E8dRjBtpwqPZKz"
+CONF_URL = "https://keytrain.uattdtydomain.gov.hk/admin/master/console/#/master"
+CLIENT_ID = "test.oidc"
+CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
 # -----------------------
 
 oauth = OAuth(app)
@@ -87,3 +87,4 @@ def logout():
 if __name__ == "__main__":
 
     app.run(port=5000, debug=True)
+
