@@ -17,7 +17,10 @@ oauth.register(
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
     server_metadata_url=CONF_URL,
-    client_kwargs={"scope": "openid profile email"},
+    client_kwargs={
+        "scope": "openid profile email",
+        "verify": False  
+    },
 )
 
 TEMPLATE = """
@@ -93,6 +96,7 @@ def logout():
 if __name__ == "__main__":
     
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
 
