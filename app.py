@@ -78,8 +78,8 @@ def auth():
 @app.route("/logout")
 def logout():
     session.clear()
-    
-    post_logout_uri = "http://127.0.0.1"
+
+    post_logout_uri = url_for("index", _external=True) 
     
     end_session_url = "https://keytrain.uattdtydomain.gov.hk"
     
@@ -91,7 +91,8 @@ def logout():
     return redirect(logout_url)
 
 if __name__ == "__main__":
+    
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
-    app.run(host='127.0.0.1', port=5000, debug=True)
 
 
