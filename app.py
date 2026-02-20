@@ -17,8 +17,13 @@ MY_IP = "192.168.116.25"
 # 直接手動定義 Keycloak 配置，避開網路抓取失敗問題
 KEYCLOAK_METADATA = {
     "issuer": "https://keytrain.uattdtydomain.gov.hk",
+    # Authlib 手動注入時建議同時提供這兩個名稱
     "authorization_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/auth",
+    "authorize_url": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/auth",
+    
     "token_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/token",
+    "access_token_url": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/token",
+    
     "userinfo_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/userinfo",
     "end_session_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/logout",
     "jwks_uri": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/certs",
@@ -29,10 +34,15 @@ oauth.register(
     name="keycloak",
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
-    server_metadata=KEYCLOAK_METADATA, # 改用手動 Metadata
+    # 直接在參數中指定，優先權最高
+    authorize_url=KEYCLOAK_METADATA["authorization_endpoint"],
+    access_token_url=KEYCLOAK_METADATA["token_endpoint"],
+    userinfo_endpoint=KEYCLOAK_METADATA["userinfo_endpoint"],
+    jwks_uri=KEYCLOAK_METADATA["jwks_uri"],
+    server_metadata=KEYCLOAK_METADATA, 
     client_kwargs={
         "scope": "openid profile email",
-        "verify": False  # 解決 SSLError
+        "verify": False
     },
 )
 
@@ -106,3 +116,4 @@ def logout():
 if __name__ == "__main__":
     # 監聽 0.0.0.0 允許外部存取
     app.run(host='0.0.0.0', port=5000, debug=True)
+
