@@ -87,19 +87,24 @@ def index():
 
 @app.route("/login")
 def login():
-    # redirect_uri 必須與 Keycloak 後台設定完全一致
-    # 建議在 Keycloak 增加 http://192.168.116.25
+    
     redirect_uri = f"http://{MY_IP}:5000/auth"
+    print(f"Redirecting to Keycloak with URI: {redirect_uri}")
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
-@app.route("/auth")
+
+
+@app.route("/auth")  # 確保這裡與 Keycloak 後台設定的完全一樣
 def auth():
-    # 這裡會連線到 token_endpoint，若 Ubuntu 無法連網會在此報錯
-    token = oauth.keycloak.authorize_access_token()
-    user = token.get('userinfo') 
-    session["user"] = user
-    session["token"] = token
-    return redirect(url_for("index"))
+    print("Received callback from Keycloak")
+    try:
+        token = oauth.keycloak.authorize_access_token()
+        user = token.get('userinfo') or oauth.keycloak.parse_id_token(token, nonce=None)
+        session["user"] = user
+        session["token"] = token
+        return redirect(url_for("index"))
+    except Exception as e:
+        return f"驗證過程中出錯: {str(e)}"
 
 @app.route("/logout")
 def logout():
@@ -116,3 +121,4 @@ def logout():
 if __name__ == "__main__":
     # 監聽 0.0.0.0 允許外部存取
     app.run(host='0.0.0.0', port=5000, debug=True)
+
