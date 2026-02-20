@@ -84,7 +84,7 @@ def index():
 @app.route("/login")
 def login():
     # 確保產生的 URI 是 http://testoidc.uattdtydomain.gov.hk
-    redirect_uri = f"http://{MY_IP}:{PORT}/auth"
+    redirect_uri = f"http://{MY_IP}/auth"
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 
@@ -116,6 +116,7 @@ def logout():
 if __name__ == "__main__":
     # 將 port 從 5000 改為 80
     app.run(host='0.0.0.0', port=80, debug=True)
+
 
 
 
