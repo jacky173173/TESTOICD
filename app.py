@@ -48,32 +48,79 @@ TEMPLATE = """
 <head>
     <title>OIDC Flask Test</title>
     <style>
-        body { font-family: sans-serif; margin: 40px; line-height: 1.6; }
-        .token-box { background: #f4f4f4; padding: 10px; border: 1px solid #ddd; word-break: break-all; white-space: pre-wrap; font-family: monospace; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 10px; border: 1px solid #ccc; text-align: left; }
-        th { background: #eee; width: 200px; }
-        .btn { padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        /* 讓內容撐滿整個視窗並置中 */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; /* 視窗高度 100% */
+            background-color: #f0f2f5; 
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        .token-box { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border: 1px solid #dee2e6; 
+            word-break: break-all; 
+            white-space: pre-wrap; 
+            font-family: 'Courier New', monospace; 
+            font-size: 11px; 
+            text-align: left;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        td, th { padding: 12px; border: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; width: 30%; }
+        .btn { 
+            display: inline-block;
+            padding: 12px 30px; 
+            background: #007bff; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #0056b3; }
+        h1 { color: #333; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <h1>Keycloak OIDC 測試專案</h1>
-    {% if not user %}
-        <p>目前未登入，請使用 Keycloak 驗證。</p>
-        <a class="btn" href="{{ url_for('login') }}">登入系統</a>
-    {% else %}
-        <a class="btn" style="background: #dc3545;" href="{{ url_for('logout') }}">登出</a>
-        <br><br>
-        <table>
-            <tr><th>Email</th><td>{{ user.email }}</td></tr>
-            <tr><th>Name</th><td>{{ user.name }}</td></tr>
-            <tr><th>Username</th><td>{{ user.preferred_username }}</td></tr>
-            <tr><th>Access Token</th><td><div class="token-box">{{ token.access_token }}</div></td></tr>
-        </table>
-    {% endif %}
+    <div class="container">
+        <h1>Keycloak OIDC 測試專案</h1>
+        {% if not user %}
+            <p style="color: #666; margin-bottom: 30px;">目前未登入，請點擊下方按鈕進行驗證。</p>
+            <a class="btn" href="{{ url_for('login') }}">進入系統登入</a>
+        {% else %}
+            <div style="text-align: right;">
+                <a class="btn" style="background: #dc3545;" href="{{ url_for('logout') }}">安全登出</a>
+            </div>
+            <br>
+            <table>
+                <tr><th>Email</th><td>{{ user.email }}</td></tr>
+                <tr><th>Name</th><td>{{ user.name }}</td></tr>
+                <tr><th>Username</th><td>{{ user.preferred_username }}</td></tr>
+            </table>
+            <p style="text-align: left; font-weight: bold; margin-top: 20px;">Access Token:</p>
+            <div class="token-box">{{ token.access_token }}</div>
+        {% endif %}
+    </div>
 </body>
 </html>
 """
+
 
 @app.route("/")
 def index():
@@ -116,6 +163,7 @@ def logout():
 if __name__ == "__main__":
     
     app.run(host='0.0.0.0', port=80, debug=True)
+
 
 
 
