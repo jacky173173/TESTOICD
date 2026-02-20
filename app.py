@@ -11,38 +11,32 @@ app.secret_key = "test_secret_key_123"
 # --- 配置資訊 ---
 CLIENT_ID = "test.oidc"
 CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
-# 你的 Ubuntu IP
 MY_IP = "192.168.116.25" 
 
-# 直接手動定義 Keycloak 配置，避開網路抓取失敗問題
+# 使用你剛剛抓到的正確端點
 KEYCLOAK_METADATA = {
-    "issuer": "https://keytrain.uattdtydomain.gov.hk",
-    # Authlib 手動注入時建議同時提供這兩個名稱
-    "authorization_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/auth",
-    "authorize_url": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/auth",
-    
-    "token_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/token",
-    "access_token_url": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/token",
-    
-    "userinfo_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/userinfo",
-    "end_session_endpoint": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/logout",
-    "jwks_uri": "https://keytrain.uattdtydomain.gov.hk/protocol/openid-connect/certs",
+    "issuer": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc",
+    "authorization_endpoint": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc/protocol/openid-connect/auth",
+    "token_endpoint": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc/protocol/openid-connect/token",
+    "userinfo_endpoint": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc/protocol/openid-connect/userinfo",
+    "end_session_endpoint": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc/protocol/openid-connect/logout",
+    "jwks_uri": "https://keytrain.uattdtydomain.gov.hk/realms/test.oidc/protocol/openid-connect/certs",
 }
 
 oauth = OAuth(app)
+# 註冊時建議直接引用 metadata
 oauth.register(
     name="keycloak",
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
-    # 直接在參數中指定，優先權最高
+    server_metadata_url=None, # 我們手動提供 metadata
     authorize_url=KEYCLOAK_METADATA["authorization_endpoint"],
     access_token_url=KEYCLOAK_METADATA["token_endpoint"],
     userinfo_endpoint=KEYCLOAK_METADATA["userinfo_endpoint"],
     jwks_uri=KEYCLOAK_METADATA["jwks_uri"],
-    server_metadata=KEYCLOAK_METADATA, 
     client_kwargs={
         "scope": "openid profile email",
-        "verify": False
+        "verify": False  # 若 Ubuntu 內部連線 SSL 有問題可保持 False
     },
 )
 
@@ -121,4 +115,5 @@ def logout():
 if __name__ == "__main__":
     # 監聽 0.0.0.0 允許外部存取
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
