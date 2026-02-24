@@ -6,7 +6,7 @@ import os
 #os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
 
 app = Flask(__name__)
-app.secret_key = "test_secret_key_123" 
+app.secret_key = os.environ.get('SECRET_KEY')  
 
 
 CLIENT_ID = "test.oidc"
@@ -160,6 +160,7 @@ def logout():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
 
