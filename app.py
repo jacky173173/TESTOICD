@@ -1,3 +1,4 @@
+
 from flask import Flask, redirect, url_for, session, render_template_string
 from authlib.integrations.flask_client import OAuth
 import os
@@ -6,7 +7,7 @@ import os
 #os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY') or 'dev-fallback-key'
+app.secret_key = "test_secret_key_123" 
 
 
 CLIENT_ID = "test.oidc"
@@ -130,7 +131,7 @@ def index():
 
 @app.route("/login")
 def login():
-    redirect_uri = url_for("auth", _external=True)  
+    redirect_uri = url_for("auth", _external=True)  # 自動偵測真實 URL
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 
@@ -156,13 +157,10 @@ def logout():
         f"?post_logout_redirect_uri={post_logout_uri}"
         f"&client_id={CLIENT_ID}"
     )
-    return redirect(logout_url)
+    return redirect(logout_url))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
-
-
-
 
 
 
