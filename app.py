@@ -3,7 +3,7 @@ from authlib.integrations.flask_client import OAuth
 import os
 
 
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
+#os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
 
 app = Flask(__name__)
 app.secret_key = "test_secret_key_123" 
@@ -130,8 +130,7 @@ def index():
 
 @app.route("/login")
 def login():
-    # 產生的網址是 http://testoidc.uattdtydomain.gov.hk
-    redirect_uri = f"http://{MY_IP}/auth"
+    redirect_uri = url_for("auth", _external=True)  # 自動偵測真實 URL
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 
@@ -151,18 +150,17 @@ def auth():
 @app.route("/logout")
 def logout():
     session.clear()
-
-    post_logout_uri = f"http://{MY_IP}/"
+    post_logout_uri = url_for("index", _external=True)  
     logout_url = (
         f"{KEYCLOAK_METADATA['end_session_endpoint']}"
         f"?post_logout_redirect_uri={post_logout_uri}"
         f"&client_id={CLIENT_ID}"
     )
-    return redirect(logout_url)
+    return redirect(logout_url))
 
 if __name__ == "__main__":
-    
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
 
