@@ -130,7 +130,7 @@ def index():
 
 @app.route("/login")
 def login():
-    redirect_uri = url_for("auth", _external=True)  # 自動偵測真實 URL
+    redirect_uri = url_for("auth", _external=True)  
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 
@@ -160,6 +160,7 @@ def logout():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
 
