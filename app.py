@@ -6,7 +6,7 @@ import os
 #os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' 
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY')  
+app.secret_key = os.environ.get('SECRET_KEY') or 'dev-fallback-key'
 
 
 CLIENT_ID = "test.oidc"
@@ -156,10 +156,11 @@ def logout():
         f"?post_logout_redirect_uri={post_logout_uri}"
         f"&client_id={CLIENT_ID}"
     )
-    return redirect(logout_url))
+    return redirect(logout_url)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
 
 
