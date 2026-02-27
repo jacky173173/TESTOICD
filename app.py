@@ -11,7 +11,7 @@ app.secret_key = "test_secret_key_123"
 
 
 CLIENT_ID = "test.oidc"
-CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF"
+CLIENT_SECRET = "gSx9sKPdqDoI6etOFMW6MJHVlV1OFUVF" # This one should be save in another file 
 MY_IP = "testoidc.uattdtydomain.gov.hk"
 redirect_uri = f"http://{MY_IP}/auth" 
 
@@ -131,7 +131,7 @@ def index():
 
 @app.route("/login")
 def login():
-    next_url = request.args.get('next', url_for('index'))
+    next_url = request.args.get('next', url_for('index')))#save the user reading page 
     session['next_url'] = next_url
     redirect_uri = url_for("auth", _external=True)
     return oauth.keycloak.authorize_redirect(redirect_uri)
@@ -169,6 +169,7 @@ if __name__ == "__main__":
         debug=True,
         ssl_context=("server.crt", "server.key") 
     )
+
 
 
 
