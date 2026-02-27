@@ -157,10 +157,16 @@ def logout():
         f"?post_logout_redirect_uri={post_logout_uri}"
         f"&client_id={CLIENT_ID}"
     )
-    return redirect(logout_url))
+    return redirect(logout_url)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(
+        host='0.0.0.0',
+        port=5000,
+        debug=True,
+        ssl_context=("server.crt", "server.key") 
+    )
+
 
 
 
