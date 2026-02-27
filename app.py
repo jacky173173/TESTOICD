@@ -131,7 +131,9 @@ def index():
 
 @app.route("/login")
 def login():
-    redirect_uri = url_for("auth", _external=True)  # 自動偵測真實 URL
+    next_url = request.args.get('next', url_for('index'))
+    session['next_url'] = next_url
+    redirect_uri = url_for("auth", _external=True)
     return oauth.keycloak.authorize_redirect(redirect_uri)
 
 
@@ -144,7 +146,8 @@ def auth():
         user = token.get('userinfo') or oauth.keycloak.parse_id_token(token, nonce=None)
         session["user"] = user
         session["token"] = token
-        return redirect(url_for("index"))
+        next_url = session.pop('next_url', url_for('index'))
+        return redirect(next_url)
     except Exception as e:
         return f"驗證過程中出錯: {str(e)}"
 
@@ -166,6 +169,7 @@ if __name__ == "__main__":
         debug=True,
         ssl_context=("server.crt", "server.key") 
     )
+
 
 
 
